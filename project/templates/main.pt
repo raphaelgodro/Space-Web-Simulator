@@ -1,0 +1,68 @@
+<html lang="${request.locale_name}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Entropie: The WebUniverse">
+    <link rel="shortcut icon" href="${request.static_url('project:static/img/pyramid-16x16.png')}">
+
+    <title>${page.name}</title>
+
+    <!-- Custom styles for this scaffold -->
+    <link href="${request.static_url('project:static/css/theme.css')}" rel="stylesheet">
+    <link href="${request.static_url('project:static/css/form.css')}" rel="stylesheet">
+    <link href="${request.static_url('project:static/css/solarsystem_menu.css')}" rel="stylesheet">
+
+    <!-- BOOTSRAP LIBRARY CSS -->
+    <link href="${request.static_url('project:static/css/bootstrap.min.css')}" rel="stylesheet">
+
+    <!-- INCLUDE CLOSURE LIBRARY -->
+    <script src="${request.static_url('project:static/externs/closure-library/closure/goog/base.js')}"></script>
+
+    <!-- INCLUDE THREE JS -->
+    <script src="${request.static_url('project:static/externs/three/three.js')}"></script>
+    <script src="${request.static_url('project:static/externs/three/orbitcontrols.js')}"></script>
+
+      <!-- INCLUDE JBEEP LIBRARY -->
+    <script src="${request.static_url('project:static/externs/sound/sound.js')}"></script>
+
+      <!-- INCLUDE BOOTSRAP LIBRARY -->
+    <script src="${request.static_url('project:static/externs/jQuery/jquery.min.js')}"></script>
+
+    <!-- INCLUDE BOOTSRAP LIBRARY -->
+    <script src="${request.static_url('project:static/externs/bootstrap/bootstrap.min.js')}"></script>
+
+    <script src="${request.static_url('project:static/js/entropy/entropyx.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/stars/stars.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/corp/corp.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/corp/planetcorp.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/corp/star.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/solarsystem/solarsystem.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/physic/physicmachine.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/menu/menutop.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/menu/menucorp.js')}"></script>
+     <script src="${request.static_url('project:static/js/entropy/menu/menusolarsystem.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/interaction/interaction.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/interaction/toggleviewinteraction.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/interaction/cameramoveinteraction.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/interaction/slidecorpmenuinteraction.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/listeners/keylistener.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/listeners/domlistener.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/renderer/renderer.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/media/image.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/media/planetslider.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/entropy.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/utils.js')}"></script>
+  </head>
+  <body>
+    <div id="corp-menu"></div><div id="event-slide"></div>
+    <div id="renderer"></div>
+    <ul id="solarsystemmenu" class="nav nav-pills nav-stacked">
+    <script>
+      var context = ${request.context}
+      entropy.render(context);
+    </script>
+
+  </body>
+</html>
+

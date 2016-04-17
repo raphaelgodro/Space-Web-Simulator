@@ -1,0 +1,11 @@
+goog.provide('entropy.menu.MenuCorp');
+
+/**
+ * Menu that can set properties of a corp dynamcally
+ * (Object that has the movement physically calculed.)
+ * @classdesc
+ * @constructor
+ */
+entropy.media.Image = function(path, opt_width) {
+  this.el_ = goog.dom.createElement('img');
+}
