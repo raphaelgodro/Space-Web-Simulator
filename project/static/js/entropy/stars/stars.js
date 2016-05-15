@@ -16,7 +16,8 @@ entropy.stars.Stars = function() {
 	this.stars = new THREE.Group();
 
 	var geometry = new THREE.SphereGeometry(25000, 80, 80);
-	var texture = THREE.ImageUtils.loadTexture('../../static/img/starsb_47_v4.jpg');
+	console.log('vvv');
+	var texture = THREE.ImageUtils.loadTexture('../../static/img/starsb_47_v2.png');
 	texture.repeat.set(1, 1);
 
 	var materialLayer1 = new THREE.MeshBasicMaterial({map: texture});
@@ -35,7 +36,7 @@ entropy.stars.Stars = function() {
 entropy.stars.Stars.prototype.updatePosition =
     function(corp) {
 
-  var corpPosition = corp.getPosition();
+  var corpPosition = corp.getRenderingPosition();
   this.stars.position.set(
     corpPosition.x,
     corpPosition.y,

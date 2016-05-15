@@ -95,10 +95,11 @@ def get_corp_context_from_db(db_corp_dict):
     context['mass'] = float(db_corp_dict['mass'])
     context['initial_speed'] = json.loads(db_corp_dict['initial_speed'])
     context['initial_position'] = json.loads(db_corp_dict['initial_position'])
-
+    print('name', context['name'])
     radiusPixel = style.radius_meter_to_pixel(
         db_corp_dict['radius'])
     context['radius'] = radiusPixel
+    print('radius', radiusPixel)
 
     context['rotation'] = json.loads(db_corp_dict['rotation'])
 

@@ -125,21 +125,21 @@ class TestSolarSystem(SolarSystem):
         return [beta]
     def planetC(self):
         media = [{
-            'title': 'Creepy monsters living there',
+            'title': 'La planete de M-Sophie',
             'credits': {
-                'name': 'Earth (Wikipedia)',
+                'name': 'Unicorn',
                 'href': 'http://wlp.ninja/wallpaper/Alien-Isolation-Wallpaper-10-840x474.jpg'
             },
             'image_path': 'http://wlp.ninja/wallpaper/Alien-Isolation-Wallpaper-10-840x474.jpg',
-            'text': 'There will be sacrifice if you go there son...'
+            'text': 'Puisses la lumiere te guider sur la planete des licornes...'
         },{
-            'title': 'wtf is the problem',
+            'title': 'Planete Marie-S 12312312312312321323213324',
             'credits': {
                 'name': 'Earth (Wikipedia)',
                 'href': 'https://en.wikipedia.org/wiki/Earth'
             },
-            'image_path': 'http://www.ahdwallpaperstab.com/wp-content/uploads/2015/03/earth_wallpaper_widescreen.jpg',
-            'text': 'Just wanna'
+            'image_path': 'http://static.planetminecraft.com/files/resource_media/screenshot/1202/FatUnicorn_1225588.jpg',
+            'text': 'Marie-Sophie est dans la lune.'
         }]
         c = Corp(
             solar_system_id = self.id,
@@ -150,9 +150,9 @@ class TestSolarSystem(SolarSystem):
             rotation =  json.dumps([ 0, -0.001, 0]),
             radius = 696342,
             initial_position = json.dumps([ 0, 0, 6.537]),
-            texture_path = "../../static/img/venusa.png",
+            texture_path = "../../static/img/sophie.jpg",
             atmosphere_path = "../../static/img/atm1.png",
-            atmosphere_color = json.dumps([18, 201,88])
+            atmosphere_color = json.dumps([255, 143,127])
             ,
             atmosphere_size = 3,
             manually_generated = True,

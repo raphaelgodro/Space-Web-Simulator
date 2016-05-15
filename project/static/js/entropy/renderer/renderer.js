@@ -140,13 +140,12 @@ entropy.renderer.Renderer.prototype.render = function() {
 	var stars = this.stars;
 	var render = goog.bind(function() {
 		requestAnimationFrame(render);
-		for (index = 0; index < solarSystem.corps.length; ++index) {
-			var corp = solarSystem.corps[index];
+		goog.array.forEach(solarSystem.corps, function(corp) {
 			var selectedCorpPosition = goog.isDefAndNotNull(
                 this.selectedCorp) ?
-			    this.selectedCorp.getPosition() :
+			    this.selectedCorp.getRenderingPosition() :
 			    new THREE.Vector3(0,0,0);
-            //console.log(!corp.stop)
+
             if (!corp.stop) {
               corp.updatePosition(this.physicsMachine_);
             }
@@ -155,7 +154,7 @@ entropy.renderer.Renderer.prototype.render = function() {
 			    corp == this.selectedCorp);
 
             stars.updatePosition(this.selectedCorp);
-		}
+		}, this);
 		renderer.render(scene, camera);
 	}, this);
 	render();

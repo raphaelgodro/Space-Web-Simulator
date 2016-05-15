@@ -12,7 +12,7 @@ entropy.physic.PhysicMachine = function(corps, renderer) {
    * If the physic machine is asynchronous with the renderer
    * Better true, less calculation for the client.
    */
-  this.async = true;
+  this.async = false;
 
   this.corps_ = corps;
   this.renderer_ = renderer;
@@ -44,6 +44,10 @@ entropy.physic.PhysicMachine = function(corps, renderer) {
   if (this.async) {
     console.log('building cycles..');
     this.buildCycles(toCalculateList);
+  } else {
+    goog.array.forEach(this.corps_, function(corp) {
+      corp.start();
+    }, this);
   }
   
 }
@@ -175,14 +179,12 @@ entropy.physic.PhysicMachine.prototype.applyAxisForcesToCorp_ =
     speeds.push(speed);
     positions.push(pos);
   }
-  if (corp.context.parent_corp_key != "None") {
-    console.log(positions.concat(speeds));
-  }
 
   if (this.async) {
     corp.appendCoordinate(positions.concat(speeds));
   } else {
-    // update the corp position ?
+    corp.setPosition(positions);
+    corp.setSpeed(speeds);
   }
 }
 
@@ -248,8 +250,12 @@ entropy.physic.PhysicMachine.prototype.getLastCoordinate_ =
     function(corp) {
   var coordinate;
   if (corp.orbitCoordinate.length == 0) {
-    coordinate = corp.context.initial_position;
-    coordinate = coordinate.concat(corp.context.initial_speed);
+    if (this.async) {
+      coordinate = corp.context.initial_position;
+      coordinate = coordinate.concat(corp.context.initial_speed);
+    } else {
+      coordinate = corp.getCoordinate();
+    }
   } else {
     coordinate = corp.orbitCoordinate[corp.orbitCoordinate.length - 1];
   }

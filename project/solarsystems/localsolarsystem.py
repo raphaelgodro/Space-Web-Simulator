@@ -72,7 +72,7 @@ class LocalSolarSystem(SolarSystem):
             parent_corp_key = "Earth",
             corp_type_id = 3,
             mass = 7.342*10**22,
-            initial_speed = json.dumps([1052, 0, 0]),
+            initial_speed = json.dumps([29780+1052, 0, 0]),
             rotation =  json.dumps([ 0, -0.01, 0]),
             radius = 1737,
             initial_position = json.dumps([0, 0, 1.0024]),
@@ -84,7 +84,7 @@ class LocalSolarSystem(SolarSystem):
             media_fr = json.dumps(media).encode('utf8'),
             manually_generated = True
             )
-        return [earth]
+        return [earth, moon]
 
     def sun(self):
         sun = Corp(
@@ -96,7 +96,7 @@ class LocalSolarSystem(SolarSystem):
             rotation =  json.dumps([ 0, 0, 0]),
             radius = 696342000,
             initial_position = json.dumps([ 0, 0, 0]),
-            texture_path = "../../static/img/sun4.jpg",
+            texture_path = "../../static/img/test/sun_surface.png",
             atmosphere_path = "../../static/img/star_png_1.png",
             atmosphere_color = json.dumps([247, 232, 114]),
             atmosphere_size = 96,

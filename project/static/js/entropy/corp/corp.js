@@ -105,6 +105,12 @@ entropy.corp.Corp = function(context) {
 	this.ringLayer;
 
 	/**
+	* Current acceleration of the corp.
+	* @type {Array<Number>}
+	*/
+	this.acc = [];
+
+	/**
 	* Planet texture mesh
 	* @type {THREE.Mesh}
 	*/
@@ -122,7 +128,37 @@ entropy.corp.Corp = function(context) {
 	this.group.add(this.positionLayer);
 
 	//temp
-	this.distancePerAU = 600
+	this.distancePerAU = 600;
+
+    // extrapolation factor when we have a satellite.
+	this.satelliteExtrapolationFactor_ = 20;
+
+	/**
+	* Current speed of the corp;
+	* @type {Array<Number>}
+	*/
+	var speed = this.context.initial_speed;
+	this.speed = [
+	  speed[0],
+	  speed[1],
+	  speed[2]
+	];
+
+	//Set the initiial position of the corp from the context
+	var initialPosition = this.context.initial_position;
+	this.setPosition(initialPosition);
+
+	/**
+	* Position in astronomical unit.
+	* @type {Array<Number>}
+	*/
+	this.position_ = initialPosition;
+
+	/**
+	* Parent corp instance of the corp.
+	* @type {entropy.corp.Corp}
+	*/
+	this.parentCorp;
 
 };
 
@@ -143,6 +179,77 @@ entropy.corp.Corp.prototype.addTexture_ = function(texturePath) {
 	var textureLayer = new THREE.Mesh(geometry, material);
 	this.textureLayers_.push(textureLayer);
 	this.group.add(textureLayer);
+	//test
+	/*var radius = this.radius_ + this.textureLayers_.length * 0.1
+	var geometry = new THREE.SphereGeometry(radius, 140, 140);
+	var sunTexture = THREE.ImageUtils.loadTexture(
+		"../../static/img/test/sun_surface.png", undefined);
+	sunTexture.anisotropy = 16;
+	sunTexture.wrapS = sunTexture.wrapT = THREE.RepeatWrapping;
+	sunColorLookupTexture = THREE.ImageUtils.loadTexture( "../../static/img/test/star_colorshift.png" );
+	var starColorGraph = THREE.ImageUtils.loadTexture( '../../images/test/star_color_modified.png' );
+	var sunUniforms = {
+		texturePrimary:   { type: "t", value: sunTexture },
+		textureColor:   { type: "t", value: sunColorLookupTexture },
+		textureSpectral: { type: "t", value: starColorGraph },
+		time: 			{ type: "f", value: 0 },
+		spectralLookup: { type: "f", value: 0 },		
+	};
+	//	list of shaders we'll load
+	var shaderList = ['../../static/shaders/starsurface'];
+
+	//	a small util to pre-fetch all shaders and put them in a data structure (replacing the list above)
+	function loadShaders( list, callback ){
+		var shaders = {};	
+
+		var expectedFiles = list.length * 2;
+		var loadedFiles = 0;
+
+		function makeCallback( name, type ){
+			return function(data){
+				if( shaders[name] === undefined ){
+					shaders[name] = {};
+				}
+				
+				shaders[name][type] = data;
+
+				//	check if done
+				loadedFiles++;
+				if( loadedFiles == expectedFiles ){				
+					callback( shaders );
+				}
+
+			};
+		}
+		
+		for( var i=0; i<list.length; i++ ){
+			var vertexShaderFile = list[i] + '.vsh';
+			var fragmentShaderFile = list[i] + '.fsh';	
+
+			//	find the filename, use it as the identifier	
+			var splitted = list[i].split('/');
+			var shaderName = splitted[splitted.length-1];
+			$(document).load( vertexShaderFile, makeCallback(shaderName, 'vertex') );
+			$(document).load( fragmentShaderFile,  makeCallback(shaderName, 'fragment') );
+		}
+	}
+	var group = this.group;
+	loadShaders( shaderList, function(e){
+		//	we have the shaders loaded now...
+		shaderList = e;
+		function makeStarSurface( radius, uniforms ){
+			var sunShaderMaterial = new THREE.ShaderMaterial( {
+				uniforms: 		uniforms,
+				vertexShader:   shaderList.starsurface.vertex,
+				fragmentShader: shaderList.starsurface.fragment,
+			});
+
+			var sunSphere = new THREE.Mesh( geometry, sunShaderMaterial);
+			return sunSphere;
+		}
+		starSurface = makeStarSurface( this.radius_, sunUniforms );
+		group.add(starSurface);
+	});*/
 };
 
 
@@ -208,24 +315,19 @@ entropy.corp.Corp.prototype.updatePosition =
   if (physicMachine.async) {
     var orbitIndex = this.orbitIndex;
     var coordinate = this.orbitCoordinate[orbitIndex];
-    var speed = 10;
+    var frameSpeed = 10;
+    this.setPosition(coordinate);
 
-    this.group.position.set(
-      coordinate[0] * this.distancePerAU,
-      coordinate[1] * this.distancePerAU,
-      coordinate[2] * this.distancePerAU
-    );
+    this.speed = [coordinate[3], coordinate[4], coordinate[5]];
 
-    if(orbitIndex + speed < this.orbitCoordinate.length - 1) {
-      this.orbitIndex+=speed;
+    if(orbitIndex + frameSpeed < this.orbitCoordinate.length - 1) {
+      this.orbitIndex+=frameSpeed;
     } else {
   	  this.orbitIndex = 0;
     }
   } else {
   	/* positioning updates fallback to the physic machine
-  	 when in sync mode */
-  	console.log('here')
-  	console.log(physicMachine);
+  	 when in synchronous mode */
     physicMachine.updateCorpPosition(this);
   }
 
@@ -253,7 +355,6 @@ entropy.corp.Corp.prototype.updateRotation =
 		}
 	}
 	if(!isSelectedCorp) {
-
 		this.atmosphereLayer.position.set(
 			this.group.position.x - selectedCorpReferential.x,
 			this.group.position.y - selectedCorpReferential.y,
@@ -270,7 +371,74 @@ entropy.corp.Corp.prototype.updateRotation =
  * Get the current position of the corp.
  */
 entropy.corp.Corp.prototype.getPosition = function() {
-	return this.group.position;
+  return this.position_;
+};
+
+
+/**
+ * Get the position of the renderred corp obejct
+ */
+entropy.corp.Corp.prototype.getRenderingPosition = function() {
+  return this.group.position;
+};
+
+
+/**
+ * Get the current speed of the corp.
+ */
+entropy.corp.Corp.prototype.getSpeed = function() {
+	return this.speed;
+};
+
+
+/**
+ * Get the current position of the corp.
+ */
+entropy.corp.Corp.prototype.getCoordinate = function() {
+	return [
+	  this.position_[0],
+	  this.position_[1],
+	  this.position_[2],
+	  this.speed[0],
+	  this.speed[1],
+	  this.speed[2]
+	];
+};
+
+
+/**
+ * Set the position of the corp from AU units to renderer units..
+ */
+entropy.corp.Corp.prototype.setPosition = function(positionAU) {
+  this.position_ = positionAU;
+  if (goog.isDef(this.parentCorp)) {
+    /* Satellite here. We have to extrapolate
+     the difference of its position with the parent corp */
+    var parentCorp = this.parentCorp;
+    var parentCorpPosition = parentCorp.getPosition();
+    var adjustedPosition = []
+    for (var i = 0; i < positionAU.length; i++) {
+      adjustedPosition.push(parentCorpPosition[i] +
+          (positionAU[i] - parentCorpPosition[i]) *
+          this.satelliteExtrapolationFactor_);
+    }
+  } else {
+    adjustedPosition = positionAU;
+  }
+
+  this.group.position.set(
+    adjustedPosition[0] * this.distancePerAU,
+    adjustedPosition[1] * this.distancePerAU,
+    adjustedPosition[2] * this.distancePerAU
+  );
+
+};
+
+/**
+ * Set the position of the corp from AU units to renderer units..
+ */
+entropy.corp.Corp.prototype.setSpeed = function(speed) {
+    this.speed = speed;
 };
 
 

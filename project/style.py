@@ -1,6 +1,11 @@
+import math
+
 def radius_meter_to_pixel(radius):
-    radius = int(radius)
-    return ((4*10**(-8))*radius + 6)/2
+    radius = float(radius)
+    print('radius', radius)
+    x = radius
+    value =  3.4126 * math.pow(10, -8) * x + 1.49932
+    return value
 
 def atmosphere_thickness(radius, atmosphere_level):
     #max on %100 of the radius which is the max value
