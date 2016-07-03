@@ -10,6 +10,6 @@
  * @extends {entropy.corp.Corp}
  */
 entropy.corp.Planet = function(context) {
-
+  goog.base(this, context);
 };
-//goog.inherits(entropy.corp.Planet, entropy.corp.Corp);
+goog.inherits(entropy.corp.Planet, entropy.corp.Corp);

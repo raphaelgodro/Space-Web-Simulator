@@ -17,6 +17,7 @@ def main(global_config, **settings):
     config.include('pyramid_chameleon')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('corps', '/corps')
+    config.add_route('view_system_selected', '/solarsystem/{pagename}/{corpname}')
     config.add_route('view_system', '/solarsystem/{pagename}')
     config.add_route('home', '/')
     config.scan()

@@ -7,6 +7,7 @@ goog.provide('entropy.corp.Corp');
  * @constructor
  */
 entropy.corp.Corp = function(context) {
+	console.log(context);
 
     /**
     * Context information of this corp
@@ -23,10 +24,15 @@ entropy.corp.Corp = function(context) {
 
 	/**
 	* Radius of the planet in THREE JS units
+	* Please note that we have a hack to set the satellitle
+	* smaller. The backend planet size in pixel is a linear function
+	* ...
 	* @type {number}
 	* @private
 	*/
-	this.radius_ = context.radius;
+	this.radius_ = context.distance_friendly_crop ?
+	    context.radius * context.distance_friendly_crop :
+	    context.radius;
 
 	/**
 	* Array of [x,y,z] coordinate that defines
@@ -65,18 +71,35 @@ entropy.corp.Corp = function(context) {
 	/**
 	* Index of the current orbital position index.
 	* the orbits of the corp
-	*
 	* @type {number}
 	*/
 	this.orbitIndex = goog.isDef(context.orbit_index) ?
 	    context.orbitIndex : 0;
 
+	this.layerGap_ = 0.03;
+
+	if (goog.isDef(context.distance_friendly_crop)) {
+	  this.atmosphereContext.size *= context.distance_friendly_crop;
+	  this.layerGap_ *= context.distance_friendly_crop;
+	}
+
 	/**
-	* Rotation variation per frame.
+	* Rotation variation matrix
 	*
 	* @type {Array<number>|undefined}
 	*/
 	this.rotation_ = context.rotation;
+
+   /**
+	* Rotation variation matrix
+	*
+	* @type {Array<number>|undefined}
+	*/
+	this.rotationPerFrame_;
+
+	if (goog.isDef(context.rotation_period)) {
+      this.rotationPerFrame_ = 0;
+	}
 
 	/**
 	* Position Z of the corp real time in AU
@@ -115,23 +138,30 @@ entropy.corp.Corp = function(context) {
 	* @type {THREE.Mesh}
 	*/
 	this.positionLayer = new THREE.Mesh();
+	this.addTexture_(this.texturePath_);
 
 	if (goog.isDef(this.ringContext_)) {
       this.loadRing_();
 	}
 
-	if (goog.isDef(this.atmosphereContext)) {
-      this.loadAtmosphere_();
-	}
-
-	this.addTexture_(this.texturePath_);
 	this.group.add(this.positionLayer);
+	this.loadAtmosphere_();
+
+    if (!this.ringLayer) {
+      console.log(this.context.name, this.ringLayer)
+	  this.shadowLayer_ = this.createLayer_(
+		  "../../static/img/shadow.png");
+	  this.group.add(this.shadowLayer_);
+	} else {
+	  this.shadowLayer_ = this.textureLayers_[0];
+	}
+	
 
 	//temp
 	this.distancePerAU = 600;
 
     // extrapolation factor when we have a satellite.
-	this.satelliteExtrapolationFactor_ = 20;
+	this.satelliteExtrapolationFactor_ = 4;
 
 	/**
 	* Current speed of the corp;
@@ -160,6 +190,38 @@ entropy.corp.Corp = function(context) {
 	*/
 	this.parentCorp;
 
+	/**
+	* Satellite/child corpses of this corp.
+	* @type {entropy.corp.Corp}
+	*/
+	this.childCorpses = [];
+
+	/**
+	* Related star to the corp instance.
+	* @type {entropy.corp.Corp\undefined}
+	*/
+	this.relatedStars;
+
+};
+
+
+/**
+ * Get the current position of the corp.
+ * @private
+ * @param {string} texturePath
+ */
+entropy.corp.Corp.prototype.createLayer_ = function(texturePath) {
+	/*the radius here depends on the number of texture layers we
+	get into the corp */
+	var radius = this.radius_ + this.textureLayers_.length * this.layerGap_;
+	var geometry = new THREE.SphereGeometry(radius, 140, 140);
+	var texture = THREE.ImageUtils.loadTexture(texturePath);
+	texture.repeat.set(1, 1);
+	var material = new THREE.MeshBasicMaterial({map: texture,
+	    transparent: true});
+	var textureLayer = new THREE.Mesh(geometry, material);
+
+	return textureLayer;
 };
 
 
@@ -169,14 +231,7 @@ entropy.corp.Corp = function(context) {
  * @param {string} texturePath
  */
 entropy.corp.Corp.prototype.addTexture_ = function(texturePath) {
-	/*the radius here depends on the number of texture layers we
-	get into the corp */
-	var radius = this.radius_ + this.textureLayers_.length * 0.1
-	var geometry = new THREE.SphereGeometry(radius, 140, 140);
-	var texture = THREE.ImageUtils.loadTexture(texturePath);
-	texture.repeat.set(1, 1);
-	var material = new THREE.MeshBasicMaterial({map: texture});
-	var textureLayer = new THREE.Mesh(geometry, material);
+    var textureLayer = this.createLayer_(texturePath);
 	this.textureLayers_.push(textureLayer);
 	this.group.add(textureLayer);
 	//test
@@ -261,7 +316,7 @@ entropy.corp.Corp.prototype.addTexture_ = function(texturePath) {
 entropy.corp.Corp.prototype.loadAtmosphere_ = function() {
 	var context = this.atmosphereContext;
 	var size = context.size;
-	var geometry = new THREE.PlaneGeometry(size, size, 1);
+	var geometry = new THREE.PlaneGeometry(size, size, 3);
 	var texture = THREE.ImageUtils.loadTexture(context.texture_path);
     var color = context.color;
 	var material = new THREE.MeshBasicMaterial({map: texture,
@@ -344,7 +399,7 @@ entropy.corp.Corp.prototype.updateRotation =
     function(cameraPosition,  selectedCorpReferential, isSelectedCorp) {
     var textureLayers = this.textureLayers_;
 
-	if (goog.isDef(this.rotation_)){
+	if ((goog.isDef(this.rotation_))&&(!this.ringLayer)){
 		for (i = 0; i < textureLayers.length; ++i) {
 			var textureRotation = textureLayers[i].rotation;
 			textureRotation.set(
@@ -364,6 +419,26 @@ entropy.corp.Corp.prototype.updateRotation =
 	}
 	this.atmosphereLayer.lookAt(cameraPosition);
 	this.atmosphereLayer.position.set(0,0,0);
+
+	this.relatedStars.forEach(function(star){
+	  var starPosition = star.getRenderingPosition();
+      var currentPosition = this.getRenderingPosition();
+      var deltaX = starPosition.x - currentPosition.x;
+      var deltaZ = starPosition.z - currentPosition.z;
+      var yAngle = Math.atan(deltaX/deltaZ);
+
+      /* Angle factor because trigonometry works opposite
+         in a z > 0 or z<0 set...*/
+      var angleFactor = deltaZ >= 0 ? 1 : 3;
+	  var shadowRotation = this.shadowLayer_.rotation;
+	  shadowRotation.set(
+	    shadowRotation.x =0,
+	    shadowRotation.y = angleFactor*Math.PI/2 - 0.1 + yAngle,
+	    shadowRotation.z = 0
+	  );
+	}, this);
+
+	//Update 
 };
 
 
@@ -372,6 +447,19 @@ entropy.corp.Corp.prototype.updateRotation =
  */
 entropy.corp.Corp.prototype.getPosition = function() {
   return this.position_;
+};
+
+
+/**
+ * Get the radius of the box that protects the corp
+ * (camera limitation around the corp)
+ */
+entropy.corp.Corp.prototype.getRadiusBox = function() {
+  if (goog.isDef(this.ringContext_)) {
+    return this.ringContext_.ring_size;
+  } else {
+    return this.radius_;
+  }
 };
 
 
@@ -419,7 +507,7 @@ entropy.corp.Corp.prototype.setPosition = function(positionAU) {
     var adjustedPosition = []
     for (var i = 0; i < positionAU.length; i++) {
       adjustedPosition.push(parentCorpPosition[i] +
-          (positionAU[i] - parentCorpPosition[i]) *
+          (parentCorpPosition[i] - positionAU[i]) *
           this.satelliteExtrapolationFactor_);
     }
   } else {
@@ -435,7 +523,7 @@ entropy.corp.Corp.prototype.setPosition = function(positionAU) {
 };
 
 /**
- * Set the position of the corp from AU units to renderer units..
+ * Set the speed of the corp.
  */
 entropy.corp.Corp.prototype.setSpeed = function(speed) {
     this.speed = speed;

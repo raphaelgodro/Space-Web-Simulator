@@ -18,6 +18,7 @@ class CorpType(object):
         corp_type = []
         corp_type.append(self.star())
         corp_type.append(self.planet())
+        corp_type.append(self.dwarf())
         corp_type.append(self.satellite())
         corp_type.append(self.comet())
         corp_type.append(self.rogue())
@@ -27,56 +28,72 @@ class CorpType(object):
 
     def star(self):
         star = CorpTypeSA(
-            name = "Star",
-            distance_friendly_crop  = 0,
+            id=1,
+            name = "star",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 0
         )
         return star
 
     def planet(self):
         planet = CorpTypeSA(
-            name = "Planet",
-            distance_friendly_crop  = 0,
+            id=2,
+            name = "planet",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 2
         )
         return planet
 
+    def dwarf(self):
+        dwarf = CorpTypeSA(
+            id=3,
+            name = "dwarf planet",
+            distance_friendly_crop  = 1,
+            physical_machine_priority = 2
+        )
+        return dwarf
+
     def satellite(self):
         satellite = CorpTypeSA(
-            name = "Satellite",
-            distance_friendly_crop  = 0,
+            id=4,
+            name = "satellite",
+            distance_friendly_crop  = 0.25,
             physical_machine_priority = 4
         )
         return satellite
 
     def comet(self):
         comet = CorpTypeSA(
-            name = "Comet",
-            distance_friendly_crop  = 0,
+            id=5,
+            name = "comet",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 0
         )
         return comet
 
     def rogue(self):
         rogue = CorpTypeSA(
-            name = "Rogue",
-            distance_friendly_crop  = 0,
+            id=6,
+            name = "rogue",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 0
         )
         return rogue
 
     def blackhole(self):
         bh = CorpTypeSA(
-            name = "Black Hole",
-            distance_friendly_crop  = 0,
+            id=7,
+            name = "black_hole",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 0
         )
         return bh
 
     def spaceship(self):
         ss = CorpTypeSA(
-            name = "Engine",
-            distance_friendly_crop  = 0,
+            id=8,
+            name = "engine",
+            distance_friendly_crop  = 1,
             physical_machine_priority = 5
         )
         return ss

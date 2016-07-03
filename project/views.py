@@ -29,11 +29,33 @@ def root(request):
 def view_system(request):
     pagename = request.matchdict['pagename']
     page = DBSession.query(SolarSystem).filter_by(name=pagename).first()
+    pagename_match = re.match('^[a-zA-Z0-9_%]+$', pagename)
+    if pagename_match is None:
+        return HTTPNotFound('No such Solar System in da Galaxy')
     if page is None:
         return HTTPNotFound('No such Solar System in da Galaxy')
 
     content = publish_parts(page.name, writer_name='html')['html_body']
-    request.context = build_renderer_context(pagename)
+    request.context = json.dumps(build_renderer_context(pagename))
+    return dict(page=page, content=content)
+
+@view_config(route_name='view_system_selected', renderer='templates/main.pt')
+def view_system_selected(request):
+    pagename = request.matchdict['pagename']
+    corpname = request.matchdict['corpname']
+    pagename_match = re.match('^[a-zA-Z0-9_%]+$', pagename)
+    corpname_match = re.match('^[a-zA-Z0-9_%]+$', corpname)
+    if pagename_match is None:
+        return HTTPNotFound('No such Solar System in da Galaxy')
+    if corpname_match is None:
+        return HTTPNotFound('No such Solar System in da Galaxy')
+
+    page = DBSession.query(SolarSystem).filter_by(name=pagename).first()
+    if page is None:
+        return HTTPNotFound('No such Solar System in da Galaxy')
+
+    content = publish_parts(page.name, writer_name='html')['html_body']
+    request.context = json.dumps(build_renderer_context(pagename, corpname))
     return dict(page=page, content=content)
 
 
@@ -60,104 +82,109 @@ def api_solar_system(request):
         response['error'] = 'Must define a solar system name.'
         return response
 
-    context = build_renderer_context(solar_system_name)
-    print(context)
+    context = json.dumps(
+        build_renderer_context(solar_system_name))
 
-def build_renderer_context(solar_system_name):
+def build_renderer_context(solar_system_name, selected_corp_name=None):
     context = {
-        'solar_system': get_solar_system_information(solar_system_name),
-        'corp_type': get_corp_type()
+        'solar_system': get_solar_system_information(
+            solar_system_name, selected_corp_name)
     }
+    print('selected_corp_name', selected_corp_name)
     return context
 
 
-def get_solar_system_information(solar_system_name):
+def get_solar_system_information(solar_system_name, selected_corp_name):
     solar_system = DBSession.query(SolarSystem).filter_by(
         name=solar_system_name).first()
     if solar_system is None:
         context['error'] = 'Solar System do not exist. Even if the universe has no limit theoretically.'
         return context
     solar_system = utils.row2dict(solar_system)
-    corps = DBSession.query(Corp).filter_by(
-        solar_system_id=solar_system['id'])
+    corps = DBSession.query(Corp, CorpType).join(
+        CorpType,
+        CorpType.id == Corp.corp_type_id
+    ).filter(
+        Corp.solar_system_id == solar_system['id']
+    ).all()
     corps_array = []
     for corp in corps:
         corps_array.append(get_corp_context_from_db(
-            utils.row2dict(corp)))
+            corp[0], corp[1]))
+
+    if selected_corp_name is not None:
+        solar_system['selected_corp_name'] = selected_corp_name
 
     solar_system['corps'] = corps_array
+    print('solar_system', solar_system)
     return solar_system
 
-def get_corp_context_from_db(db_corp_dict):
+def get_corp_context_from_db(corp, corp_type):
+    print('corp', corp)
+    print('corp_type', corp_type)
     context = {}
-    context['texture_path'] = db_corp_dict['texture_path']
-    context['name'] = db_corp_dict['name']
-    context['mass'] = float(db_corp_dict['mass'])
-    context['initial_speed'] = json.loads(db_corp_dict['initial_speed'])
-    context['initial_position'] = json.loads(db_corp_dict['initial_position'])
-    print('name', context['name'])
-    radiusPixel = style.radius_meter_to_pixel(
-        db_corp_dict['radius'])
-    context['radius'] = radiusPixel
-    print('radius', radiusPixel)
+    context['texture_path'] = corp.texture_path
+    context['id'] = corp.id
+    context['name'] = corp.name
+    context['mass'] = corp.mass
+    context['initial_speed'] = json.loads(corp.initial_speed)
+    context['rotation_period'] = corp.rotation_period
+    context['initial_position'] = json.loads(corp.initial_position)
+    context['distance_friendly_crop'] = corp_type.distance_friendly_crop
+    context['corp_type_id'] = corp.corp_type_id
 
-    context['rotation'] = json.loads(db_corp_dict['rotation'])
+    radius_pixel = style.radius_meter_to_pixel(
+        corp.radius)
+    context['radius'] = radius_pixel
 
-    if db_corp_dict['orbit_coordinate'] is not None:
+
+    context['rotation'] = json.loads(corp.rotation)
+
+    if corp.orbit_coordinate is not None:
         try:
-            context['orbit_coordinates'] = json.loads(db_corp_dict['orbit_coordinate'])
+            context['orbit_coordinates'] = json.loads(corp.orbit_coordinate)
         except: pass
 
     ring_context = {}
 
-    if db_corp_dict['ring_path'] is not None:
-        ring_context['ring_path'] = db_corp_dict['ring_path']
+    if corp.ring_path is not None:
+        ring_context['ring_path'] = corp.ring_path
 
-    if db_corp_dict['ring_size'] is not None:
+
+    if corp.ring_size is not None:
         try:
             ring_context['ring_size'] = style.ring_dimension(
-                radiusPixel, int(db_corp_dict['ring_size']))
+                radius_pixel, int(corp.ring_size))
         except: pass
 
-    if db_corp_dict['ring_rotation'] is not None:
+    if corp.ring_rotation is not None:
         try:
             ring_context['ring_rotation'] = json.loads(
-                db_corp_dict['ring_rotation'])
+                corp.ring_rotation)
         except: pass
 
     if len(ring_context) == 3:
         context['ring_context'] = ring_context
 
-    if db_corp_dict['media_en'] is not None:
+    if corp.media_en is not None:
         try:
             media = json.loads(
-                db_corp_dict['media_en'])
+                corp.media_en)
             media = utils.byteify(media)
             context['media'] = media
         except: pass
 
-    if db_corp_dict['parent_corp_key'] is not None:
+    if corp.parent_corp_id is not None:
         try:
-            context['parent_corp_key'] = db_corp_dict['parent_corp_key']
+            context['parent_corp_id'] = corp.parent_corp_id
+            print(context)
         except: pass
 
     atmosphere_size = style.atmosphere_thickness(
-        radiusPixel, int(db_corp_dict['atmosphere_size']))
+        radius_pixel, int(corp.atmosphere_size))
     context['atmosphere_context'] = {
-        'color': json.loads(db_corp_dict['atmosphere_color']),
-        'texture_path': db_corp_dict['atmosphere_path'],
+        'color': json.loads(corp.atmosphere_color),
+        'texture_path': corp.atmosphere_path,
         'size': atmosphere_size
     }
     return context
-
-def get_corp_type():
-    corp_type = DBSession.query(CorpType)
-    corps_type_array = []
-    for type in corp_type:
-        print(type)
-
-    return corps_type_array
-
-
-
-

@@ -37,6 +37,7 @@
     <script src="${request.static_url('project:static/js/entropy/corp/corp.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/corp/planetcorp.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/corp/star.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/corp/corpfactory.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/solarsystem/solarsystem.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/physic/physicmachine.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/menu/menutop.js')}"></script>
@@ -57,7 +58,10 @@
   <body>
     <div id="corp-menu"></div><div id="event-slide"></div>
     <div id="renderer"></div>
-    <ul id="solarsystemmenu" class="nav nav-pills nav-stacked">
+    <div id="solarsystemmenu">
+    <ul id="planetmenu" class="nav nav-pills nav-stacked"></ul>
+    <ul id="satellitemenu" class="nav nav-pills nav-stacked"></ul>
+    </div>
     <script>
       var context = ${request.context}
       entropy.render(context);

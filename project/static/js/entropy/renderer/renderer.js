@@ -88,7 +88,8 @@ entropy.renderer.Renderer = function(solarSystem) {
 	 * @type {entropy.corp.Corp?}
 	 * @private
 	 */
-	this.selectedCorp = null;
+	this.selectedCorp = solarSystem.selectedCorp ? solarSystem.selectedCorp :
+	    solarSystem.stars[0];
 
 
 	this.renderer_.setClearColor(0x000000, 1);
@@ -105,12 +106,10 @@ entropy.renderer.Renderer = function(solarSystem) {
 
 	this.scene_.add(this.stars.stars);
     this.scene_.add(this.aimingCameraObject_);
-    //this.scene_.add(this.stars.starsMoving);
-    //this.scene_.add(this.stars.starsColor);
 
 	this.loadCorps(this.solarSystem.corps);
 
-	this.setCameraFocus(this.solarSystem.corps[1]);
+	this.setCameraFocus(this.selectedCorp);
 
 	rendererDom.appendChild(this.renderer_.domElement);
 	controls.update();
@@ -196,10 +195,8 @@ entropy.renderer.Renderer.prototype.setCameraFocus =
       this.selectedCorp = corp;
       this.corpMenu_.updateCorp(corp);
       this.selectedCorp.group.add(this.camera_);
+      this.controls.constraint.minDistance = corp.getRadiusBox() + 5;
     }
-
-
-    //Move background stars around the camera...
 
 };
 
@@ -214,7 +211,6 @@ entropy.renderer.Renderer.prototype.moveCamera =
   var x = camera.position.x;
   var y = camera.position.y;
   var z = camera.position.z;
-  console.log('aiming position', this.aimingCameraObject_.position);
 
   if (goog.isDefAndNotNull(this.selectedCorp)) {
     this.aimingCameraObject_.add(this.camera_);
@@ -223,11 +219,10 @@ entropy.renderer.Renderer.prototype.moveCamera =
   //Check if an object is currently selected
   if (goog.isDefAndNotNull(this.selectedCorp)) {
     var position = this.selectedCorp.getPosition();
-    console.log(this.selectedCorp.group);
     x = position.x;
     y = position.y;
     z = position.z;
-    console.log('position', position);
+    this.camera_.lookAt(position);
     this.selectedCorp = null;
   }
 
@@ -238,6 +233,5 @@ entropy.renderer.Renderer.prototype.moveCamera =
   position.x = x;
   position.y = y;
   position.z = z;
-  console.log('camera', this.camera_);
   camera.updateProjectionMatrix();
 };

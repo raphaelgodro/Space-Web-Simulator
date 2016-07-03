@@ -8,6 +8,7 @@ goog.provide('entropy');
  * at the beginning.
  */
 entropy.render = function(context) {
+
 	//Play sound
 	//jBeep("http://104.131.100.253:6543/static/audio/theme1.wav");
     //var foo = new Sound("http://104.131.100.253:6543/static/audio/Enjoy-the-silence.mp3",100,true);
