@@ -26,6 +26,9 @@
       <!-- INCLUDE JBEEP LIBRARY -->
     <script src="${request.static_url('project:static/externs/sound/sound.js')}"></script>
 
+    <!-- INCLUDE NUMERAL  LIBRARY -->
+    <script src="${request.static_url('project:static/externs/numeral/numeral.min.js')}"></script>
+
       <!-- INCLUDE BOOTSRAP LIBRARY -->
     <script src="${request.static_url('project:static/externs/jQuery/jquery.min.js')}"></script>
 

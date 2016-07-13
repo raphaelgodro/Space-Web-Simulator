@@ -136,3 +136,26 @@ body{
     text-align: justify;
     color: rgba(255, 255, 255, 1);
 }
+.corp-menu-properties {
+    text-align: center;
+    height: 40%;
+    color: white;
+}
+.corp-menu-properties h3 {
+    font-family: "Title Entropy", "Arial";
+    font-size: 1.2em;
+    text-align: center;
+    color: rgba(255, 255, 255, 1);
+    text-shadow:
+      1px 1px 0px #2899EB,
+      1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+.corp-menu-properties form {
+    font-family: "Title Entropy", "Arial"; 
+}
+.corp-menu-properties input {
+    color: black;
+    font-weight: 100;
+    font-family: "Arial";
+
+}

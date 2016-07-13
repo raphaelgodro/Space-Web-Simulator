@@ -62,7 +62,7 @@ entropy.interaction.KeyListener.prototype.createListeners_ =
      function(event) {
 
   var renderer = this.renderer_;
-  this.addInteraction_(
+  /*this.addInteraction_(
     entropy.interaction.CameraMoveKey.LEFT,
     new entropy.interaction.CameraMoveInteraction(
         renderer));
@@ -77,7 +77,7 @@ entropy.interaction.KeyListener.prototype.createListeners_ =
   this.addInteraction_(
     entropy.interaction.CameraMoveKey.DOWN,
     new entropy.interaction.CameraMoveInteraction(
-        renderer));
+        renderer));*/
 
   this.addInteraction_(
     entropy.interaction.ToggleViewKey.DEFAULT,

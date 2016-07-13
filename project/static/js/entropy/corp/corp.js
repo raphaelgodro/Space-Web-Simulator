@@ -147,7 +147,6 @@ entropy.corp.Corp = function(context) {
 	this.loadAtmosphere_();
 
     if (!this.ringLayer) {
-      console.log(this.context.name, this.ringLayer)
 	  this.shadowLayer_ = this.createLayer_(
 		  "../../static/img/shadow.png");
 	  this.group.add(this.shadowLayer_);

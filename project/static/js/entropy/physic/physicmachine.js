@@ -26,7 +26,7 @@ entropy.physic.PhysicMachine = function(corps, renderer) {
   this.cycleIncertitude_ = 0.00000001;
 
   /** DeltaT Factor in orbit calculation*/
-  this.deltaT_ = 6000;
+  this.deltaT_ = 3600;
 
   /** Minimum physic machine turn before the cycle completion checkup
    can be performed */

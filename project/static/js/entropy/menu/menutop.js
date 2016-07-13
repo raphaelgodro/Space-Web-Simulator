@@ -25,7 +25,7 @@ entropy.menu.MenuTop.prototype.createMenu_ = function(context) {
   var title = goog.dom.createDom('span', {
     'id': 'title'
   });
-  goog.dom.append(title, 'Entropie');
+  goog.dom.append(title, 'Entropie (BETA)');
   goog.dom.append(el, title);
   var corpTitleBg = goog.dom.createDom('div', {
     'id': 'corpTitleBg'

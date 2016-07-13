@@ -27,6 +27,8 @@ function(corp) {
   goog.dom.append(this.el_, contentEl);
 
   this.updateMenuTopTitle_();
+  console.log('updateCorp');
+  this.corpProperties.updateProperties(corp);
 };
 
 
@@ -43,9 +45,9 @@ entropy.menu.MenuCorp.prototype.createMenu_ = function() {
     var planetSlider = new entropy.media.PlanetSlider(context.media);
     goog.dom.append(menu, planetSlider.slide);
   }
-  var corpProperties = new entropy.menu.PropertiesMenu(corp);
-  goog.dom.append(menu, corpProperties.getElement());
-
+  this.corpProperties = new entropy.menu.PropertiesMenu(corp);
+  goog.dom.append(menu, this.corpProperties.getElement());
+  return menu;
 };
 
 
