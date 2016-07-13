@@ -7,7 +7,6 @@ goog.provide('entropy.corp.Corp');
  * @constructor
  */
 entropy.corp.Corp = function(context) {
-	console.log(context);
 
     /**
     * Context information of this corp

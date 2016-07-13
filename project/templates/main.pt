@@ -52,11 +52,13 @@
     <script src="${request.static_url('project:static/js/entropy/renderer/renderer.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/media/image.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/media/planetslider.js')}"></script>
+    <script src="${request.static_url('project:static/js/entropy/menu/menucorpproperties.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/entropy.js')}"></script>
     <script src="${request.static_url('project:static/js/entropy/utils.js')}"></script>
   </head>
   <body>
-    <div id="corp-menu"></div><div id="event-slide"></div>
+    <div id="corp-menu"></div>
+        <div id="event-slide"></div>
     <div id="renderer"></div>
     <div id="solarsystemmenu">
     <ul id="planetmenu" class="nav nav-pills nav-stacked"></ul>

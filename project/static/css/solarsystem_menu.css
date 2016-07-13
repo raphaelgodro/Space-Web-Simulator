@@ -1,11 +1,11 @@
 @font-face {
     font-family: "Title Entropy";
-    src: url('http://104.131.100.253:6543/static/fonts/basictitlefont.ttf');
+    src: url('../../static/fonts/basictitlefont.ttf');
 }
 
 @font-face {
     font-family: "Text Entropy";
-    src: url('http://104.131.100.253:6543/static/fonts/Arvo-Regular.ttf');
+    src: url('../../static/fonts/Arvo-Regular.ttf');
 }
 
 #solarsystemmenu ul {

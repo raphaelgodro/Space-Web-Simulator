@@ -120,8 +120,6 @@ def get_solar_system_information(solar_system_name, selected_corp_name):
     return solar_system
 
 def get_corp_context_from_db(corp, corp_type):
-    print('corp', corp)
-    print('corp_type', corp_type)
     context = {}
     context['texture_path'] = corp.texture_path
     context['id'] = corp.id
@@ -166,13 +164,13 @@ def get_corp_context_from_db(corp, corp_type):
     if len(ring_context) == 3:
         context['ring_context'] = ring_context
 
-    if corp.media_en is not None:
+    """if corp.media_en is not None:
         try:
             media = json.loads(
                 corp.media_en)
             media = utils.byteify(media)
             context['media'] = media
-        except: pass
+        except: pass"""
 
     if corp.parent_corp_id is not None:
         try:

@@ -28,7 +28,6 @@ entropy.media.PlanetSlider = function(medias) {
  */
 entropy.media.PlanetSlider.prototype.createSlide_ =
     function(media) {
-  console.log(media);
   var el = goog.dom.createDom('div', {
     'class': 'planet-slider'
   });
@@ -37,7 +36,7 @@ entropy.media.PlanetSlider.prototype.createSlide_ =
   var img = new entropy.media.Image(media.image_path);
 
   goog.dom.append(el, img.getElement());
-  var title = goog.dom.createDom('h3')
+  var title = goog.dom.createDom('h3');
   goog.dom.append(title, media.title);
   goog.dom.append(el, title);
   var p = goog.dom.createElement('p');
@@ -84,6 +83,7 @@ entropy.media.PlanetSlider.prototype.createArrows_ =
     goog.events.listen(
         rightArrow, 'click', this.handleRightArrow_,
         false, this);
+    //TODO : UNREGISTER THIS STUFF
   }
 
   goog.dom.append(el, arrows);

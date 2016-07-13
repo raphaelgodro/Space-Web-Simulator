@@ -123,7 +123,7 @@ class LocalSolarSystem(SolarSystem):
             name = "Sun",
             corp_type_id = 1,
             mass = 1.98855*10**30,
-            initial_speed = json.dumps([0,0,0]),
+            initial_speed = json.dumps([29780,0,0]),
             rotation =  json.dumps([ 0, 0, 0]),
             radius = 696342000,
             initial_position = json.dumps([ 0, 0, 0]),
@@ -137,6 +137,45 @@ class LocalSolarSystem(SolarSystem):
         )
 
         self.db_session.add(sun)
+
+        sun2 = Corp(
+            solar_system_id = self.id,
+            name = "Sun2",
+            corp_type_id = 2,
+            mass = 1.98855*10**30,
+            initial_speed = json.dumps([109780,0,0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 696342000,
+            initial_position = json.dumps([ 0, 0, 1.5]),
+            texture_path = "../../static/img/sun4.jpg",
+            atmosphere_path = "../../static/img/star_png_1.png",
+            atmosphere_color = json.dumps([247, 232, 114]),
+            atmosphere_size = 96,
+            manually_generated = True,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8')
+        )
+
+        self.db_session.add(sun2)
+        sun3 = Corp(
+            solar_system_id = self.id,
+            name = "Sun2",
+            corp_type_id = 2,
+            mass = 1.98855*10**30,
+            initial_speed = json.dumps([109780,0,0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 696342000,
+            initial_position = json.dumps([ 0, 0, 3]),
+            texture_path = "../../static/img/sun4.jpg",
+            atmosphere_path = "../../static/img/star_png_1.png",
+            atmosphere_color = json.dumps([247, 232, 114]),
+            atmosphere_size = 96,
+            manually_generated = True,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8')
+        )
+
+        self.db_session.add(sun3)
         return [sun]
 
     def mars(self):

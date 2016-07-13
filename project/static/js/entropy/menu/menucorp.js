@@ -37,13 +37,14 @@ function(corp) {
  */
 entropy.menu.MenuCorp.prototype.createMenu_ = function() {
   var context = this.corp_.context;
+  var menu = goog.dom.createDom('div')
 
   if (goog.isDef(context.media)) {
     var planetSlider = new entropy.media.PlanetSlider(context.media);
-    return planetSlider.slide;
-  } else {
-    return "";
+    goog.dom.append(menu, planetSlider.slide);
   }
+  var corpProperties = new entropy.menu.PropertiesMenu(corp);
+  goog.dom.append(menu, corpProperties.getElement());
 
 };
 

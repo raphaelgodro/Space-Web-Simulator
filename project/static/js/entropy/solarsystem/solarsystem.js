@@ -28,13 +28,11 @@ entropy.solarsystem.SolarSystem = function(context) {
 
   //Attach parent corp when the corp is a satellite.
   goog.array.forEach(this.corps, function(corp) {
-    console.log(corp.context.parent_corp_id)
     if (corp.context.parent_corp_id) {
       var parentCorpId = corp.context.parent_corp_id;
       var parentCorp = this.getCorpById(parentCorpId);
       corp.parentCorp = parentCorp;
       parentCorp.childCorpses.push(corp);
-      console.lof
       
     }
   }, this);
@@ -46,7 +44,6 @@ entropy.solarsystem.SolarSystem = function(context) {
   //Attach the star instance to every corp.
   this.corps.forEach(function(corp) {
     corp.relatedStars = this.stars;
-    console.log(corp);
   }, this);
 };
 
