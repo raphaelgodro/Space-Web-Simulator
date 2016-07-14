@@ -60,6 +60,22 @@
     <script src="${request.static_url('project:static/js/entropy/utils.js')}"></script>
   </head>
   <body>
+    <div id="about-entropie" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Entropie 0.0 (BETA)</h4>
+            </div>
+            <div class="modal-body">
+                <p>Entropie is a web solar system simulator made in Javascript using WebGl. This project is born because space is freaking awesome and mind blowing. Now, in 2016, your browser can simulate it using the Newton's laws on gravity.
+
+                    If you wish to contact me, here's my info :</p>
+                    <a href="https://www.facebook.com/raphael.gaudreault.10"> Facebook </a> | <a href="https://ca.linkedin.com/in/raphael-gaudreault-8519a1b5"> LinkedIn </a> | <a href="https://twitter.com/RaphaelGaudreau"> Twitter </a>
+                    <br><br><br>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+         </div>
+    </div>
     <div id="corp-menu"></div>
         <div id="event-slide"></div>
     <div id="renderer"></div>

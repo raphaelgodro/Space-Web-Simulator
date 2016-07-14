@@ -27,7 +27,6 @@ function(corp) {
   goog.dom.append(this.el_, contentEl);
 
   this.updateMenuTopTitle_();
-  console.log('updateCorp');
   this.corpProperties.updateProperties(corp);
 };
 

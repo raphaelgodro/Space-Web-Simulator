@@ -39,6 +39,8 @@ entropy.interaction.DomListener.prototype.createListeners_ =
      function() {
   this.addInteraction_(goog.dom.getElement('event-slide'),
       goog.events.EventType.CLICK, new entropy.interaction.SlideCorpMenuInteraction());
+  this.addInteraction_(goog.dom.getElement('collapse-icon'),
+      goog.events.EventType.CLICK, new entropy.interaction.ToggleViewInteraction());
 
   //goog.events.listen(window, goog.events.EventType.KEYUP, this.handleKeyUp_, false, this);
   this.interactionsMap_.forEach(function(listener) {

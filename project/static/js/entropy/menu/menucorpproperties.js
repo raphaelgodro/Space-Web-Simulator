@@ -79,12 +79,14 @@ entropy.menu.PropertiesMenu.prototype.createProperty_ =
     'for': 'massInput',
     'class': 'col-sm-2'
   });
+  var container = goog.dom.createDom('div', {
+    'class': 'col-sm-4 '
+  });
   var inputEl = goog.dom.createDom('input', {
     'type': type,
-    'class': 'col-sm-4',
+    'class': 'form-control',
     'id': label
   });
-  console.log(inputEl);
 
   // register focus listener
   $(inputEl).click(function() {
@@ -94,7 +96,8 @@ entropy.menu.PropertiesMenu.prototype.createProperty_ =
 
   goog.dom.append(fieldSet, labelEl);
   goog.dom.append(labelEl, label);
-  goog.dom.append(fieldSet, inputEl);
+  goog.dom.append(container, inputEl);
+  goog.dom.append(fieldSet, container);
    
 };
 

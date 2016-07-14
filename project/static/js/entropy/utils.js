@@ -1,7 +1,6 @@
 goog.provide('utils');
 
 entropy.utils = function() {
-	console.log('utils');
 };
 
 //Function to convert hex format to a rgb color

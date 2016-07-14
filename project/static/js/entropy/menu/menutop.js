@@ -23,9 +23,11 @@ entropy.menu.MenuTop.prototype.createMenu_ = function(context) {
   });
 
   var title = goog.dom.createDom('span', {
-    'id': 'title'
+    'id': 'title',
+    'data-toggle': 'modal',
+    'data-target': '#about-entropie'
   });
-  goog.dom.append(title, 'Entropie (BETA)');
+  goog.dom.append(title, 'Entropie');
   goog.dom.append(el, title);
   var corpTitleBg = goog.dom.createDom('div', {
     'id': 'corpTitleBg'
@@ -36,10 +38,16 @@ entropy.menu.MenuTop.prototype.createMenu_ = function(context) {
   var solarsystemTitle = goog.dom.createDom('span', {
     'id': 'solarsystemTitle'
   });
+  var collapseIcon = goog.dom.createDom('span', {
+    'id': 'collapse-icon',
+    'class': 'glyphicon glyphicon-collapse-up',
+    'aria-hidden': 'true'
+  });
   goog.dom.append(solarsystemTitle, context.solar_system.name);
 
   goog.dom.append(corpTitleBg, corpTitle);
   goog.dom.append(el, solarsystemTitle);
+  goog.dom.append(el, collapseIcon);
   goog.dom.append(el, corpTitleBg);
 
 
