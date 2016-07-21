@@ -71,7 +71,7 @@ class LocalSolarSystem(SolarSystem):
             rotation =  json.dumps([ 0, -0.01, 0]),
             radius = 6371,
             initial_position = json.dumps([0, 0, 1]),
-            texture_path = "../../static/img/earthnight2.jpg",
+            texture_path = "../../static/img/earthcloud.jpg",
             atmosphere_path = "../../static/img/atm1.png",
             atmosphere_color = json.dumps([43, 75, 204]),
             atmosphere_size = 3,
@@ -428,7 +428,88 @@ class LocalSolarSystem(SolarSystem):
             ring_rotation = json.dumps([9*math.pi/16, 0, 0])
         )
         self.db_session.add(saturn)
-        return [saturn]
+        saturn_id = self.db_session.query(Corp.id).filter(
+            Corp.name == "Saturn").one()[0]
+        mimas = Corp(
+            solar_system_id = self.id,
+            name = "Mimas",
+            corp_type_id = 4,
+            parent_corp_id = saturn_id,
+            mass = 3.7394*10**19,
+            initial_speed = json.dumps([14280 + 9644.6, 0, 0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 2410.3 * 1000,
+            initial_position = json.dumps([ 0, 0, 9.537 + 0.00124025161]),
+            texture_path = "../../static/img/mimas.jpg",
+            atmosphere_path = "../../static/img/atm1.png",
+            atmosphere_color = json.dumps([189, 199, 181]),
+            atmosphere_size = 0,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8'),
+            manually_generated = True
+        )
+        self.db_session.add(mimas)
+
+        enceladus = Corp(
+            solar_system_id = self.id,
+            name = "Enceladus",
+            corp_type_id = 4,
+            parent_corp_id = saturn_id,
+            mass = 1.08022*10**20,
+            initial_speed = json.dumps([12640 + 9644.6, 0, 0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 2410.3 * 1000,
+            initial_position = json.dumps([ 0, 0, 9.537 + 0.00159058414]),
+            texture_path = "../../static/img/enceladus.jpg",
+            atmosphere_path = "../../static/img/atm1.png",
+            atmosphere_color = json.dumps([189, 199, 181]),
+            atmosphere_size = 0,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8'),
+            manually_generated = True
+        )
+        self.db_session.add(enceladus)
+
+        tethys = Corp(
+            solar_system_id = self.id,
+            name = "Tethys",
+            corp_type_id = 4,
+            parent_corp_id = saturn_id,
+            mass = 6.17449*10**20,
+            initial_speed = json.dumps([11350 + 9644.6, 0, 0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 531 * 1000,
+            initial_position = json.dumps([ 0, 0, 9.537 + 0.00196940637]),
+            texture_path = "../../static/img/tethys.jpg",
+            atmosphere_path = "../../static/img/atm1.png",
+            atmosphere_color = json.dumps([189, 199, 181]),
+            atmosphere_size = 0,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8'),
+            manually_generated = True
+        )
+        self.db_session.add(tethys)
+        titan = Corp(
+            solar_system_id = self.id,
+            name = "Titan",
+            corp_type_id = 4,
+            parent_corp_id = saturn_id,
+            mass = 1.3452*10**23,
+            initial_speed = json.dumps([5570+ 9644.6, 0, 0]),
+            rotation =  json.dumps([ 0, 0, 0]),
+            radius = 2575.5 * 1000,
+            initial_position = json.dumps([ 0, 0, 9.537 + 0.008167696467]),
+            texture_path = "../../static/img/titan.jpg",
+            atmosphere_path = "../../static/img/atm1.png",
+            atmosphere_color = json.dumps([201, 179, 79]),
+            atmosphere_size = 3,
+            media_en = json.dumps(media).encode('utf8'),
+            media_fr = json.dumps(media).encode('utf8'),
+            manually_generated = True
+        )
+        self.db_session.add(titan)
+
+        return [saturn, mimas, enceladus, tethys, titan]
 
     def uranus(self):
         media = [{
