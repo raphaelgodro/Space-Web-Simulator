@@ -25,7 +25,7 @@ def root(request):
     return HTTPFound(location = request.route_url('view_system',
                                                   pagename='TestSolarSystem'))
 
-@view_config(route_name='view_system', renderer='templates/main.pt')
+@view_config(route_name='view_system', renderer='templates/main_prod.pt')
 def view_system(request):
     pagename = request.matchdict['pagename']
     page = DBSession.query(SolarSystem).filter_by(name=pagename).first()
@@ -39,7 +39,7 @@ def view_system(request):
     request.context = json.dumps(build_renderer_context(pagename))
     return dict(page=page, content=content)
 
-@view_config(route_name='view_system_selected', renderer='templates/main.pt')
+@view_config(route_name='view_system_selected', renderer='templates/main_prod.pt')
 def view_system_selected(request):
     pagename = request.matchdict['pagename']
     corpname = request.matchdict['corpname']
@@ -164,13 +164,14 @@ def get_corp_context_from_db(corp, corp_type):
     if len(ring_context) == 3:
         context['ring_context'] = ring_context
 
-    """if corp.media_en is not None:
+    if corp.media_en is not None:
         try:
+	    pass
             media = json.loads(
                 corp.media_en)
             media = utils.byteify(media)
-            context['media'] = media
-        except: pass"""
+            #  context['media'] = media
+        except: pass
 
     if corp.parent_corp_id is not None:
         try:

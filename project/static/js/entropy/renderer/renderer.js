@@ -138,7 +138,9 @@ entropy.renderer.Renderer.prototype.render = function() {
 	var solarSystem = this.solarSystem;
 	var stars = this.stars;
 	var render = goog.bind(function() {
-		requestAnimationFrame(render);
+        setTimeout( function() {
+		  requestAnimationFrame(render);
+        }, 10)
 		goog.array.forEach(solarSystem.corps, function(corp) {
 			var selectedCorpPosition = goog.isDefAndNotNull(
                 this.selectedCorp) ?

@@ -128,7 +128,6 @@ entropy.media.PlanetSlider.prototype.updateSlide_ =
       goog.dom.getElementsByTagNameAndClass('planet-slider')[0];
 
   var corpMenu = goog.dom.getElement('corp-menu');
-  corpMenu.children[0] = this.slide;
 
   goog.dom.removeChildren(corpMenu, this.slide);
   this.slide = this.createSlide_(

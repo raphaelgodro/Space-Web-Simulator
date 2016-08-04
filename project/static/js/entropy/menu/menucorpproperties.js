@@ -12,9 +12,11 @@ goog.require('goog.events.Event');
  * @classdesc
  * @constructor
  */
-entropy.menu.PropertiesMenu = function(corp) {
-  this.el_ = this.createMenu_();
+entropy.menu.PropertiesMenu = function(physicMachine) {
   this.corp_ = null;
+  this.physicMachine_ = physicMachine;
+  this.el_ = this.createMenu_();
+  
 };
 
 
@@ -24,7 +26,6 @@ entropy.menu.PropertiesMenu = function(corp) {
  */
 entropy.menu.PropertiesMenu.prototype.getElement =
     function() {
-  console.log(this.el_);
   return this.el_;
 
 };
@@ -32,11 +33,22 @@ entropy.menu.PropertiesMenu.prototype.getElement =
 
 entropy.menu.PropertiesMenu.prototype.updateProperties =
     function(corp) {
+
+  //Unlisten previous listeners
+  $('#Mass').unbind("change", this.handleMassChange_);
+  $('#Secondinsimulatorpersecond').unbind("change", this.handleDeltaTChange_);
+
   this.corp_ = corp;
-  var a = 10;
+  var a = 14;
   var mass = numeral(corp.context.mass.toPrecision(a)).format('0.000');
-  console.log($('#Mass'));
   $('#Mass').val(mass);
+  var initialDeltaT = this.physicMachine_.getDeltaT()*60;
+  $('#Secondinsimulatorpersecond').val(initialDeltaT);
+
+  //Create listeners
+  $('#Mass').change(this.handleMassChange_.bind(this));
+  $('#Secondinsimulatorpersecond').change(
+      this.handleDeltaTChange_.bind(this));
 
 };
 
@@ -49,18 +61,34 @@ entropy.menu.PropertiesMenu.prototype.createMenu_ =
   var el = goog.dom.createDom('div', {
     'class': 'corp-menu-properties'
   });
-
-  var title = goog.dom.createDom('h3');
-  goog.dom.append(title, 'Physical Properties');
-  goog.dom.append(el, title);
+  var title1 = goog.dom.createDom('h3');
+  goog.dom.append(title1, 'Space-Time Properties');
 
   var form = goog.dom.createDom('form');
   var firstRow = this.createRow_([{
+    'label': 'Second in simulator per second',
+    'type': 'number',
+    'class': ['col-sm-7', 'col-sm-5']
+  }]);
+  goog.dom.append(el, title1);
+
+
+  var title2 = goog.dom.createDom('h3');
+  goog.dom.append(title2, 'Corp Properties');
+  goog.dom.append(form, firstRow);
+  goog.dom.append(el, form);
+
+  goog.dom.append(el, title2);
+
+  form = goog.dom.createDom('form');
+  var firstRow = this.createRow_([{
     'label': 'Mass',
     'type': 'number',
+    'class': ['col-sm-2', 'col-sm-4']
   }, {
     'label': 'Speed',
-    'type': 'number'
+    'type': 'number',
+    'class': ['col-sm-2', 'col-sm-4']
   }])
 
   goog.dom.append(form, firstRow);
@@ -74,18 +102,18 @@ entropy.menu.PropertiesMenu.prototype.createMenu_ =
 };
 
 entropy.menu.PropertiesMenu.prototype.createProperty_ =
-    function(fieldSet, label , type) {
+    function(fieldSet, label , type, colClass) {
   var labelEl = goog.dom.createDom('label', {
     'for': 'massInput',
-    'class': 'col-sm-2'
+    'class': colClass[0]
   });
   var container = goog.dom.createDom('div', {
-    'class': 'col-sm-4 '
+    'class': colClass[1]
   });
   var inputEl = goog.dom.createDom('input', {
     'type': type,
     'class': 'form-control',
-    'id': label
+    'id': label.replace(/\s/g, '')
   });
 
   // register focus listener
@@ -111,11 +139,24 @@ entropy.menu.PropertiesMenu.prototype.createRow_ =
     this.createProperty_(
       fieldSet,
       properties[i]['label'],
-      properties[i]['type']
+      properties[i]['type'],
+      properties[i]['class']
     );
   }
   return fieldSet;
 
 };
 
+entropy.menu.PropertiesMenu.prototype.handleMassChange_ =
+    function(event) {
+  this.corp_.context.mass = parseFloat(event.currentTarget.value);
+};
+
+
+entropy.menu.PropertiesMenu.prototype.handleDeltaTChange_ =
+    function(event) {
+  console.log(this.physicMachine_);
+  this.physicMachine_.setDeltaT(parseFloat(
+      event.currentTarget.value) / 60);
+};
 

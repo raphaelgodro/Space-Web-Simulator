@@ -26,7 +26,7 @@ entropy.physic.PhysicMachine = function(corps, renderer) {
   this.cycleIncertitude_ = 0.00000001;
 
   /** DeltaT Factor in orbit calculation*/
-  this.deltaT_ = 3600;
+  this.deltaT_ = 1800;
 
   /** Minimum physic machine turn before the cycle completion checkup
    can be performed */
@@ -261,3 +261,26 @@ entropy.physic.PhysicMachine.prototype.getLastCoordinate_ =
   }
   return coordinate;
 }
+
+
+/*
+ * Set the deltaT of the system
+ * @param {entropy.corp.Corp} corp
+ * @return {boolean}
+ */
+entropy.physic.PhysicMachine.prototype.setDeltaT =
+    function(deltaT) {
+  this.deltaT_ = deltaT;
+}
+
+
+/*
+ * Get the deltaT of the system
+ * @param {entropy.corp.Corp} corp
+ * @return {boolean}
+ */
+entropy.physic.PhysicMachine.prototype.getDeltaT =
+    function() {
+  return this.deltaT_;
+}
+

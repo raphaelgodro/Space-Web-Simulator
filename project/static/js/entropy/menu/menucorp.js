@@ -11,6 +11,8 @@ entropy.menu.MenuCorp = function(physicMachine) {
 
   this.corpContext_ = null;
   this.physicMachine_ = physicMachine;
+  this.corpProperties = new entropy.menu.PropertiesMenu(
+      this.physicMachine_);
 }
 
 
@@ -41,10 +43,8 @@ entropy.menu.MenuCorp.prototype.createMenu_ = function() {
   var menu = goog.dom.createDom('div')
 
   if (goog.isDef(context.media)) {
-    var planetSlider = new entropy.media.PlanetSlider(context.media);
     goog.dom.append(menu, planetSlider.slide);
   }
-  this.corpProperties = new entropy.menu.PropertiesMenu(corp);
   goog.dom.append(menu, this.corpProperties.getElement());
   return menu;
 };

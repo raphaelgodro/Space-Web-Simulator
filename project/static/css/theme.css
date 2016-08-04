@@ -130,7 +130,6 @@ body{
 }
 .planet-slider {
     text-align: center;
-    height: 40%;
 }
 .planet-slider .arrows {
     color: white;
@@ -168,7 +167,6 @@ body{
 }
 .corp-menu-properties {
     text-align: center;
-    height: 40%;
     color: white;
 }
 .corp-menu-properties h3 {
