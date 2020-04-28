@@ -60,7 +60,7 @@ def delete_corp_type():
 
 def add_manual_solar_system():
     localsolarsystem.LocalSolarSystem(DBSession)
-    #testsolarsystem.TestSolarSystem(DBSession)
+    testsolarsystem.TestSolarSystem(DBSession)
 
 def add_corp_type():
     corptype.CorpType(DBSession)

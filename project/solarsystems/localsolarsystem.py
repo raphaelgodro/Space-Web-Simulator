@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from solarsystem import SolarSystem
+from ..solarsystems.solarsystem  import SolarSystem
 
 from ..models import Corp
 from ..models import SolarSystem as SolarSystemTable
@@ -82,8 +82,15 @@ class LocalSolarSystem(SolarSystem):
         db_session = self.db_session
         db_session.add(earth)
 
-        earth_id = db_session.query(Corp.id).filter(
-            Corp.name == "Earth").one()[0]
+        earth_corp = db_session.query(Corp).filter(
+            Corp.name == "Earth").first()
+        if earth_corp:
+            earth_id = earth_corp.id
+        else:
+            earth_id = 3
+
+
+
         moon = Corp(
             solar_system_id = self.id,
             name = "Moon",
@@ -270,8 +277,12 @@ class LocalSolarSystem(SolarSystem):
             manually_generated = True
         )
         self.db_session.add(jupiter)
-        jupiter_id = self.db_session.query(Corp.id).filter(
-            Corp.name == "Jupiter").one()[0]
+        jupiter_corp = self.db_session.query(Corp).filter(
+            Corp.name == "Jupiter").first()
+        if jupiter_corp:
+            jupiter_id = jupiter_corp.id
+        else:
+            jupiter_id = 5 
         media = [{
             'title': 'The icy world',
             'credits': {
@@ -428,8 +439,12 @@ class LocalSolarSystem(SolarSystem):
             ring_rotation = json.dumps([9*math.pi/16, 0, 0])
         )
         self.db_session.add(saturn)
-        saturn_id = self.db_session.query(Corp.id).filter(
-            Corp.name == "Saturn").one()[0]
+        saturn_corp = self.db_session.query(Corp).filter(
+            Corp.name == "Saturn").first()
+        if saturn_corp:
+            saturn_id = saturn_corp.id
+        else:
+            saturn_id = 6
         mimas = Corp(
             solar_system_id = self.id,
             name = "Mimas",

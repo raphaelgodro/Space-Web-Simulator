@@ -1,14 +1,22 @@
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+print('_________________________________')
+print(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+print('_________________________________')
+print('_________________________________')
+print(sys.path)
+print('_________________________________')
 import cgi
 import re
 import json
-import utils
-import style
+import project.utils as utils
+import project.style as style
 from docutils.core import publish_parts
 
 from pyramid.httpexceptions import (
     HTTPFound,
     HTTPNotFound,
-    )
+)
 
 from pyramid.view import view_config
 
@@ -25,7 +33,7 @@ def root(request):
     return HTTPFound(location = request.route_url('view_system',
                                                   pagename='TestSolarSystem'))
 
-@view_config(route_name='view_system', renderer='templates/main_prod.pt')
+@view_config(route_name='view_system', renderer='templates/main.pt')
 def view_system(request):
     pagename = request.matchdict['pagename']
     page = DBSession.query(SolarSystem).filter_by(name=pagename).first()
@@ -39,7 +47,7 @@ def view_system(request):
     request.context = json.dumps(build_renderer_context(pagename))
     return dict(page=page, content=content)
 
-@view_config(route_name='view_system_selected', renderer='templates/main_prod.pt')
+@view_config(route_name='view_system_selected', renderer='templates/main.pt')
 def view_system_selected(request):
     pagename = request.matchdict['pagename']
     corpname = request.matchdict['corpname']
@@ -101,12 +109,16 @@ def get_solar_system_information(solar_system_name, selected_corp_name):
         context['error'] = 'Solar System do not exist. Even if the universe has no limit theoretically.'
         return context
     solar_system = utils.row2dict(solar_system)
+    print('solar_system RAG', solar_system)
+    corps_tests = corps = DBSession.query(Corp).all()
+    corps_tests_2 = DBSession.query(CorpType).all()
+    print('corps_tests_2', corps_tests_2)
+    print('corps_test', corps_tests)
     corps = DBSession.query(Corp, CorpType).join(
         CorpType,
         CorpType.id == Corp.corp_type_id
-    ).filter(
-        Corp.solar_system_id == solar_system['id']
     ).all()
+    print('corps RAG', corps)
     corps_array = []
     for corp in corps:
         corps_array.append(get_corp_context_from_db(
@@ -116,6 +128,7 @@ def get_solar_system_information(solar_system_name, selected_corp_name):
         solar_system['selected_corp_name'] = selected_corp_name
 
     solar_system['corps'] = corps_array
+    print('sharing...')
     print('solar_system', solar_system)
     return solar_system
 
@@ -166,7 +179,7 @@ def get_corp_context_from_db(corp, corp_type):
 
     if corp.media_en is not None:
         try:
-	    pass
+            #pass
             media = json.loads(
                 corp.media_en)
             media = utils.byteify(media)

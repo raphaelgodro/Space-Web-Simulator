@@ -19,8 +19,12 @@ class SolarSystem(object):
         db_session = self.db_session
         db_session.add(self.solar_system)
         solar_system_row = db_session.query(SolarSystemTable).order_by(
-            SolarSystemTable.id.desc()).first()
-        self.id = solar_system_row.id
+            SolarSystemTable.id.desc()
+        ).first()
+        if solar_system_row:
+            self.id = solar_system_row.id
+        else:
+            self.id = 0
 
     def generate_solar_system(): pass
 

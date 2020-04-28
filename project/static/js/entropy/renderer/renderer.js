@@ -88,6 +88,7 @@ entropy.renderer.Renderer = function(solarSystem) {
 	 * @type {entropy.corp.Corp?}
 	 * @private
 	 */
+	console.log('solarSystem!!!', solarSystem);
 	this.selectedCorp = solarSystem.selectedCorp ? solarSystem.selectedCorp :
 	    solarSystem.stars[0];
 
@@ -191,10 +192,13 @@ entropy.renderer.Renderer.prototype.loadCorp =
  */
 entropy.renderer.Renderer.prototype.setCameraFocus =
      function(corp) {
+    console.log('goog.isNull(corp)', goog.isNull(corp));
     if (goog.isNull(corp)){
       this.camera_.lookAt(new THREE.Vector3(0, 0, 0));
     } else {
+      console.log('setCameraFocus! TRIGGERED!')
       this.selectedCorp = corp;
+      console.log('this.selectedCorp the thing thats null', this.selectedCorp);
       this.corpMenu_.updateCorp(corp);
       this.selectedCorp.group.add(this.camera_);
       this.controls.constraint.minDistance = corp.getRadiusBox() + 5;

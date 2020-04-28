@@ -12,6 +12,7 @@ class CorpType(object):
         corp_type = self.corp_type
         db_session = self.db_session
         for type in corp_type :
+            print('type to add', type)
             db_session.add(type)
 
     def generate_corp_type(self):

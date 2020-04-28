@@ -1,4 +1,4 @@
-from solarsystem import SolarSystem
+from ..solarsystems.solarsystem import SolarSystem
 
 from ..models import Corp
 from ..models import SolarSystem as SolarSystemTable

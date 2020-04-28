@@ -16,7 +16,7 @@ entropy.stars.Stars = function() {
 	this.stars = new THREE.Group();
 
 	var geometry = new THREE.SphereGeometry(25000, 80, 80);
-	var texture = THREE.ImageUtils.loadTexture('../../static/img/stars5_min.jpg');
+	var texture = THREE.ImageUtils.loadTexture('../../static/img/starsb_47_v3.png');
 	texture.repeat.set(1, 1);
 
 	var materialLayer1 = new THREE.MeshBasicMaterial({map: texture});
